@@ -1,9 +1,10 @@
 import path from 'path';
 import fs from 'fs';
-import uploadConfig from '@config/upload';
 import { injectable, inject } from 'tsyringe';
 
+import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/AppError';
+
 import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
 import IUsersRepository from '../repositories/IUsersRepository';
 
@@ -32,7 +33,7 @@ class UpdateUserAvatarService {
     }
 
     if (user.avatar) {
-      // Deleta o avatar antigo
+      // Se o ussuário tinha um avatar. Deleta o avatar antigo
       await this.storageProvider.deleteFile(user.avatar);
     }
 

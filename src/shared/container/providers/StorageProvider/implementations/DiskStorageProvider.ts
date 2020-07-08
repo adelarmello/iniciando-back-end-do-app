@@ -3,8 +3,6 @@ import path from 'path';
 import uploadConfig from '@config/upload';
 import IStorageProvider from '../models/IStorageProvider';
 
-// import IStorageProvider from '@shared/container/providers/StorageProviders/models/IStorageProvider';
-
 class DiskStorageProvider implements IStorageProvider {
   public async saveFile(file: string): Promise<string> {
     await fs.promises.rename(
