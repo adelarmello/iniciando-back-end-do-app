@@ -1,20 +1,24 @@
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
 import FakeUserTokensRepository from '../repositories/fakes/FakeUserTokensRepository';
+import FakeHashProvider from '../provider/HashProvider/fakes/FakeHashProvider';
 import ResetPasswordService from './ResetPasswordService';
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeUserTokensRepository: FakeUserTokensRepository;
+let fakeHashProvider: FakeHashProvider;
 let resetPassword: ResetPasswordService;
 
-describe('SendForgotPasswordEmail', () => {
+describe('ResetPasswordService', () => {
   // beforeEach é disparado antes de cada teste.
   beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository();
     fakeUserTokensRepository = new FakeUserTokensRepository();
+    fakeHashProvider = new FakeHashProvider();
 
     resetPassword = new ResetPasswordService(
       fakeUsersRepository,
       fakeUserTokensRepository,
+      fakeHashProvider,
     );
   });
 
@@ -30,6 +34,9 @@ describe('SendForgotPasswordEmail', () => {
     // Criando um token
     const { token } = await fakeUserTokensRepository.generate(user.id);
 
+    // Antes de trocar a senha
+    const generateHash = jest.spyOn(fakeHashProvider, 'generateHash');
+
     await resetPassword.execute({
       password: '123123', // Nova senha
       token, // Usando o token criado
@@ -38,6 +45,7 @@ describe('SendForgotPasswordEmail', () => {
     // Guarda o id do user fake criado
     const updatedUser = await fakeUsersRepository.findById(user.id);
 
+    expect(generateHash).toBeCalledWith('123123');
     expect(updatedUser?.password).toBe('123123');
   });
 });
