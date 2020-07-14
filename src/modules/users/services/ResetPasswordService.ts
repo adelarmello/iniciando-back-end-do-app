@@ -4,7 +4,7 @@ import { isAfter, addHours } from 'date-fns';
 import AppError from '@shared/errors/AppError';
 import IUsersRepository from '../repositories/IUsersRepository';
 import IUserTokensRepository from '../repositories/IUserTokensRepository';
-import IHashProvide from '../provider/HashProvider/models/IHashProvider';
+import IHashProvider from '../provider/HashProvider/models/IHashProvider';
 
 interface IRequest {
   token: string; // Token de recupperação de senha
@@ -20,8 +20,8 @@ class ResetPasswordService {
     @inject('UserTokensRepository')
     private userTokensRepository: IUserTokensRepository,
 
-    @inject('HashProvide')
-    private hashProvider: IHashProvide,
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   public async execute({ token, password }: IRequest): Promise<void> {
