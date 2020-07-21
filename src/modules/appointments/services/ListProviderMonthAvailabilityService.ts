@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
-// import User from '@modules/users/infra/typeorm/entities/User';
-// import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
+import { getDaysInMonth, getDate } from 'date-fns';
+
 import IAppointmentsRepository from '../repositories/IApointmentsRepository';
 
 interface IRequest {
@@ -32,10 +32,30 @@ class ListProviderMonthAvailabilityService {
         year,
         month,
       },
+    ); // Agendamentos de um mês específico
+
+    const numberOfDaysInMonth = getDaysInMonth(new Date(year, month - 1));
+
+    const eachDayArray = Array.from(
+      { length: numberOfDaysInMonth },
+      (_, index) => index + 1,
     );
 
-    console.log(appointments);
-    return [{ day: 1, available: false }];
+    const availability = eachDayArray.map(day => {
+      const appointmentsInDay = appointments.filter(appointment => {
+        return getDate(appointment.date) === day;
+      }); // Retorna todo os agendamentos de um dia específico
+
+      return {
+        day,
+        available: appointmentsInDay.length < 10,
+      };
+    });
+    // Agendamentos são um a cada hora,
+    // começando das 8 até as 17, então são no total 10 agendamentos por dia.
+    // se tem menos que 10 agendamentos significa que ainda tem horário disponível.
+
+    return availability;
   }
 }
 
