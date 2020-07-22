@@ -1,5 +1,6 @@
 import { inject, injectable } from 'tsyringe';
-import { getHours } from 'date-fns';
+import { getHours, isAfter } from 'date-fns';
+// isAfter verifica se um horário está depois do outro
 
 import IAppointmentsRepository from '../repositories/IApointmentsRepository';
 
@@ -41,13 +42,21 @@ class ListProviderDayAvailabilityService {
       { length: 10 },
       (_, index) => index + hourStart,
     );
+
+    const currentDate = new Date(Date.now()); // Pega a data atual
+
     const availability = eachHourArray.map(hour => {
       const hasAppointmentsInHour = appointments.find(
         appointment => getHours(appointment.date) === hour,
       ); // Ver se tem agendamento naquele horário
+
+      const compareDate = new Date(year, month - 1, day, hour); // Dia , mês, ano e hora do agendamento: 2020-05-20 08:00:00
+
       return {
         hour,
-        available: !hasAppointmentsInHour,
+        available: !hasAppointmentsInHour && isAfter(compareDate, currentDate),
+        // Pra estar disponível: Não pode ter agendamento e a hora precisa ser depois da hora atual!
+        // Pega a hora do agendamento e verifica se é depois da hora atual
       };
     });
     return availability;
