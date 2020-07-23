@@ -16,16 +16,16 @@ class Appointment {
   id: string;
 
   @Column()
-  provider_id: string;
+  provider_id: string; // Coluna no BD
 
   @ManyToOne(() => User) // Muitos agendamentos para um user(prestador de serviço)
   @JoinColumn({ name: 'provider_id' })
   provider: User;
 
   @Column()
-  user_id: string;
+  user_id: string; // Coluna no BD
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User) // Muitos agendamento pra um usuário(cliente)
   @JoinColumn({ name: 'user_id' })
   user: User;
 

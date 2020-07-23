@@ -4,7 +4,6 @@ import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 
 import Appointment from '../infra/typeorm/entities/Appointment';
-
 import IAppointmentsRepository from '../repositories/IApointmentsRepository';
 
 interface IRequest {
@@ -49,6 +48,7 @@ class CreateAppointmentService {
       throw new AppError('This appoimtment is already booked');
     }
 
+    // agendamento. Id do prestador, Id do cliente e data do agendamento.
     const appointment = await this.appointmentsRepository.create({
       provider_id,
       user_id,
