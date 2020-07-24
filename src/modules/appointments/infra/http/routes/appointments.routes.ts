@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { celebrate, Segments, Joi } from 'celebrate';
 
 import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
 import AppointmentsController from '../controllers/AppointmentsController';
@@ -10,7 +11,16 @@ const providerAppointmentsController = new ProviderAppointmentsController();
 
 appointmentsRouter.use(ensureAuthenticated);
 
-appointmentsRouter.post('/', appointmentsController.create); // Rota: Criar um agendamento
+appointmentsRouter.post(
+  '/',
+  celebrate({
+    [Segments.BODY]: {
+      provider_id: Joi.string().uuid().required(),
+      date: Joi.date(),
+    },
+  }),
+  appointmentsController.create,
+); // Rota: Criar um agendamento
 appointmentsRouter.get('/me', providerAppointmentsController.index); // Rota: Listar os agendamentos de um prestador em um dia específico.
 
 export default appointmentsRouter;
