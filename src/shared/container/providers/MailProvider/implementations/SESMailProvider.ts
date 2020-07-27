@@ -32,14 +32,15 @@ export default class SESMailProvider implements IMailProvider {
     const { name, email } = mailConfig.defaults.from;
 
     await this.client.sendMail({
-      from: {
-        name: from?.name || name,
-        address: from?.email || email,
-      },
       to: {
         name: to.name,
         address: to.email,
       },
+      from: {
+        name: from?.name || name,
+        address: from?.email || email,
+      },
+
       subject,
       html: await this.mailTemplateProvider.parse(templateData),
     });
