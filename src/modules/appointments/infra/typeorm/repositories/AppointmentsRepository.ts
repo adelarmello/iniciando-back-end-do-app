@@ -63,6 +63,7 @@ class AppointmentsRepository implements IAppointmentsRepository {
             `to_char(${dateFieldName}, 'DD-MM-YYYY') = '${parsedDay}-${parsedMonth}-${year}'`,
         ),
       },
+      relations: ['user'], // Essa flag 'relations' serve pra quando eu listar os dados de um agendamento ele já traz os dados do cliente(user) junto. O user esta no bd
     });
 
     return appointments;
